@@ -1,15 +1,16 @@
 :root{
-    --void:#09080a;
-    --panel:#120f0b;
-    --card:#1a150e;
-    --card-2:#221b10;
-    --gold:#c9a24a;
-    --gold-light:#e8cd82;
-    --gold-deep:#7a5a22;
-    --gold-dim:rgba(201,162,74,.15);
-    --cream:#f1ead9;
-    --muted:#a89b83;
-    --line:rgba(201,162,74,.16);
+    :root{
+    --void:#061a1f;
+    --panel:#0a2630;
+    --card:#0f303c;
+    --card-2:#123844;
+    --gold:#2dd4bf;
+    --gold-light:#5eead4;
+    --gold-deep:#0f766e;
+    --gold-dim:rgba(45,212,191,.15);
+    --cream:#e8f6f5;
+    --muted:#8fa8ac;
+    --line:rgba(45,212,191,.16);
     --mono:'JetBrains Mono', ui-monospace, monospace;
     --sans:'Vazirmatn', Tahoma, sans-serif;
     --radius:14px;
@@ -101,9 +102,9 @@
   #hero-canvas-wrap{position:absolute; inset:0; z-index:0;}
   #hero-canvas-wrap canvas{width:100%; height:100%; display:block;}
   .hero-fallback-bg{position:absolute; inset:0; background:
-      radial-gradient(circle at 30% 70%, rgba(201,162,74,.18), transparent 55%),
-      radial-gradient(circle at 75% 30%, rgba(122,90,34,.16), transparent 55%);
-    animation:pulseGlow 8s ease-in-out infinite;}
+    radial-gradient(circle at 30% 70%, rgba(45,212,191,.18), transparent 55%),
+    radial-gradient(circle at 75% 30%, rgba(15,118,110,.16), transparent 55%);
+  animation:pulseGlow 8s ease-in-out infinite;}
   @keyframes pulseGlow{0%,100%{opacity:.7;} 50%{opacity:1;}}
   .hero-scrim{
     position:absolute; inset:0; z-index:1;
