@@ -1,9 +1,11 @@
 name = "orum-zamin-behsazan"
-pages_build_output_dir = "public"
+main = "src/index.js"
 compatibility_date = "2024-09-01"
 
-# پس از ساخت KV namespace در داشبورد کلودفلر، مقدار id را اینجا جایگزین کنید.
-# دستور ساخت از طریق ترمینال:  npx wrangler kv namespace create OZ_KV
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
 [[kv_namespaces]]
 binding = "OZ_KV"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+id = "71d57c45837d4934886eb0a5b2b5e4cf"
