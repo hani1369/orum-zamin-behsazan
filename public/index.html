@@ -226,7 +226,7 @@
     </div>
     <div class="footer-bottom">
       <p>© <span id="footer-year"></span> اروم زمین بهسازان — تمامی حقوق محفوظ است.</p>
-      <button class="admin-link" id="open-admin">
+      <button class="admin-link" id="open-admin" style="display:none" aria-hidden="true" tabindex="-1">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         پنل مدیریت
       </button>
@@ -740,16 +740,24 @@ const overlay = document.getElementById('admin-overlay');
 const loginView = document.getElementById('admin-login-view');
 const panelView = document.getElementById('admin-panel-view');
 
-document.getElementById('open-admin').addEventListener('click', async ()=>{
+async function openAdmin(){
   overlay.classList.add('open');
   if(adminToken){
     const ok = await loadLeads();
     if(ok){ showPanel(); return; }
   }
   showLogin();
-});
-document.getElementById('close-admin').addEventListener('click', ()=> overlay.classList.remove('open'));
-overlay.addEventListener('click', (e)=>{ if(e.target === overlay) overlay.classList.remove('open'); });
+}
+function closeAdmin(){
+  overlay.classList.remove('open');
+  if(location.hash === '#admin') history.replaceState(null, '', location.pathname + location.search);
+}
+document.getElementById('open-admin').addEventListener('click', openAdmin);
+document.getElementById('close-admin').addEventListener('click', closeAdmin);
+overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeAdmin(); });
+function checkAdminHash(){ if(location.hash === '#admin') openAdmin(); }
+window.addEventListener('hashchange', checkAdminHash);
+setTimeout(checkAdminHash, 0);
 
 function showLogin(){
   loginView.style.display = 'block';
