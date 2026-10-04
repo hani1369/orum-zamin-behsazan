@@ -8,6 +8,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
+<style>
+.service-icon.has-img{padding:0;overflow:hidden}
+.service-icon img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
+.brand-badge img{width:100%;height:100%;object-fit:contain;border-radius:inherit;display:block}
+#hero-visual>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#collab{padding:90px 0}
+.contact-info-item small{display:block;color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.7}
+.social-row{display:flex;gap:10px;margin-top:16px}
+.social-row a{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,.25);color:inherit;transition:.2s}
+.social-row a:hover{color:#f5821f;border-color:#f5821f}
+.social-row svg{width:19px;height:19px}
+.icon-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.icon-row .thumb{width:46px;height:46px;object-fit:cover;border-radius:8px}
+.admin-field select{width:100%;padding:10px;border-radius:8px;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.2);font:inherit}
+.admin-field select option{color:#000}
+</style>
 </head>
 <body>
 
@@ -119,6 +135,17 @@
       </div>
       <div class="training-list" id="training-list"></div>
     </div>
+  </div>
+</section>
+
+<!-- ===== COLLAB ===== -->
+<section id="collab">
+  <div class="container">
+    <span class="eyebrow reveal">همکاری</span>
+    <h2 class="section-title reveal">آماده همکاری با ارگان‌های دولتی و خصوصی</h2>
+    <p class="section-sub reveal">آمادگی داریم پروژه‌های مطالعاتی و اجرایی شما را با تیم متخصص و دستگاه‌های پیشرفته انجام دهیم.</p>
+    <div class="services-grid" id="collab-grid"></div>
+    <div style="text-align:center; margin-top:30px;"><a href="#contact" class="btn btn-gold">درخواست همکاری</a></div>
   </div>
 </section>
 
@@ -239,6 +266,12 @@
             <div class="admin-field"><label>متن دکمه دوم</label><input id="e-hero-cta2"></div>
           </div>
 
+          <div class="admin-section-title">لوگو و تصویر بالای صفحه</div>
+          <div id="e-images-wrap"></div>
+
+          <div class="admin-section-title">متن‌های سایت (هدر، عنوان بخش‌ها، فوتر)</div>
+          <div id="e-texts-wrap"></div>
+
           <div class="admin-section-title">آمار سایت</div>
           <div id="e-stats-wrap"></div>
 
@@ -251,12 +284,19 @@
           <div class="admin-section-title">دوره‌های آموزشی</div>
           <div id="e-training-wrap"></div>
 
+          <div class="admin-section-title">کارت‌های بخش همکاری</div>
+          <div id="e-collab-wrap"></div>
+
           <div class="admin-section-title">اطلاعات تماس</div>
           <div class="admin-grid">
             <div class="admin-field"><label>تلفن ثابت</label><input id="e-contact-phone"></div>
             <div class="admin-field"><label>تلفن همراه</label><input id="e-contact-mobile"></div>
             <div class="admin-field"><label>ایمیل</label><input id="e-contact-email"></div>
             <div class="admin-field"><label>آدرس</label><input id="e-contact-address"></div>
+            <div class="admin-field"><label>ساعت پاسخگویی (کنار شماره‌ها نمایش داده می‌شود)</label><input id="e-contact-hours"></div>
+            <div class="admin-field"><label>اینستاگرام (آیدی یا لینک)</label><input id="e-contact-instagram" dir="ltr"></div>
+            <div class="admin-field"><label>تلگرام (آیدی یا لینک)</label><input id="e-contact-telegram" dir="ltr"></div>
+            <div class="admin-field"><label>واتساپ (شماره، مثلاً 0912...)</label><input id="e-contact-whatsapp" dir="ltr"></div>
           </div>
         </div>
 
@@ -318,8 +358,12 @@ const ICONS = {
   layers: '<path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/><path d="M3 18l9 5 9-5"/>',
   mountain: '<path d="M3 20 9 8l4 6 2-3 6 9H3z"/><circle cx="17" cy="6" r="1.8"/>',
   chart: '<path d="M4 19V9M10 19V5M16 19v-7M2 19h20"/>',
-  drill: '<path d="M12 2v6M9 8h6l-1 4h-4L9 8z"/><path d="M12 12v10M9 22h6"/>'
+  drill: '<path d="M12 2v6M9 8h6l-1 4h-4L9 8z"/><path d="M12 12v10M9 22h6"/>',
+  building: '<path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6M9 10h.01M15 10h.01"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 13h18"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 3-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .8 3.5 2.6 3.5 5.7"/>'
 };
+const ICON_NAMES = {wave:'موج / ژئوفیزیک', drop:'قطره آب', layers:'لایه‌ها', mountain:'کوه / معدن', chart:'نمودار', drill:'حفاری', building:'ساختمان', briefcase:'کیف / شرکت', users:'افراد'};
 function svgIcon(name){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||ICONS.drop)+'</svg>';
 }
@@ -362,8 +406,16 @@ const DEFAULT_CONTENT = {
     phone:"021-22345678",
     mobile:"0912-1234567",
     email:"info@orumzaminbehsazan.ir",
-    address:"ایران، تهران"
-  }
+    address:"ایران، تهران",
+    hours:"پاسخگویی: شنبه تا پنجشنبه، ساعت ۸ تا ۱۷ (به‌جز روزهای تعطیل)",
+    instagram:"", telegram:"", whatsapp:""
+  },
+  collabItems:[
+    {icon:"building", title:"ارگان‌ها و سازمان‌های دولتی", desc:"همکاری با دستگاه‌های اجرایی در پروژه‌های مطالعاتی و عمرانی."},
+    {icon:"briefcase", title:"شرکت‌ها و بخش خصوصی", desc:"ارائه خدمات ژئوفیزیک و آب‌یابی برای پروژه‌های کشاورزی، صنعتی و معدنی."},
+    {icon:"users", title:"پیمانکاران و مشاوران", desc:"همکاری فنی و ارائه گزارش‌های قابل استناد برای پیمانکاران و مهندسین مشاور."}
+  ],
+  texts:{}, logo:"", heroImage:""
 };
 
 let siteContent = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
@@ -396,9 +448,12 @@ async function loadContent(){
       const merged = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
       if(data && typeof data === 'object'){
         if(data.hero && typeof data.hero === 'object') merged.hero = Object.assign(merged.hero, data.hero);
-        ['stats','services','process','training'].forEach(k=>{
-          if(Array.isArray(data[k]) && data[k].length) merged[k] = data[k];
+        ['stats','services','process','training','collabItems'].forEach(k=>{
+          if(Array.isArray(data[k])) merged[k] = data[k];
         });
+        if(typeof data.logo === 'string') merged.logo = data.logo;
+        if(typeof data.heroImage === 'string') merged.heroImage = data.heroImage;
+        if(data.texts && typeof data.texts === 'object') merged.texts = data.texts;
         if(data.contact && typeof data.contact === 'object') merged.contact = Object.assign(merged.contact, data.contact);
       }
       siteContent = merged;
@@ -488,14 +543,21 @@ function renderAll(){
 
   document.getElementById('services-grid').innerHTML = siteContent.services.map((s,i)=>
     `<div class="service-card reveal reveal-delay-${(i%3)+1}">
-      <div class="service-icon">${svgIcon(s.icon)}</div>
+      ${iconHtml(s)}
+      <h3>${escapeHtml(s.title)}</h3><p>${escapeHtml(s.desc)}</p>
+    </div>`
+  ).join('');
+
+  document.getElementById('collab-grid').innerHTML = (siteContent.collabItems||[]).map((s,i)=>
+    `<div class="service-card reveal reveal-delay-${(i%3)+1}">
+      ${iconHtml(s)}
       <h3>${escapeHtml(s.title)}</h3><p>${escapeHtml(s.desc)}</p>
     </div>`
   ).join('');
 
   document.getElementById('process-list').innerHTML = siteContent.process.map((p,i)=>
     `<div class="process-item reveal reveal-delay-${(i%5)+1}">
-      <div class="process-num">${escapeHtml(p.n)}</div>
+      <div class="process-num">${String(i+1).padStart(2,'0')}</div>
       <div class="process-body"><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.desc)}</p></div>
     </div>`
   ).join('');
@@ -509,8 +571,8 @@ function renderAll(){
 
   const c = siteContent.contact;
   document.getElementById('contact-info-list').innerHTML = `
-    <div class="contact-info-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><b>تلفن ثابت</b><span>${escapeHtml(c.phone)}</span></div></div>
-    <div class="contact-info-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><b>تلفن همراه</b><span>${escapeHtml(c.mobile)}</span></div></div>
+    <div class="contact-info-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><b>تلفن ثابت</b><span>${escapeHtml(c.phone)}</span>${hoursSmall(c)}</div></div>
+    <div class="contact-info-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><b>تلفن همراه</b><span>${escapeHtml(c.mobile)}</span>${hoursSmall(c)}</div></div>
     <div class="contact-info-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div><div><b>ایمیل</b><span>${escapeHtml(c.email)}</span></div></div>
     <div class="contact-info-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><b>آدرس</b><span>${escapeHtml(c.address)}</span></div></div>
   `;
@@ -520,6 +582,12 @@ function renderAll(){
     <li><span style="color:var(--muted)">${escapeHtml(c.address)}</span></li>
   `;
   document.getElementById('footer-year').textContent = new Date().getFullYear();
+  const soc = socialHtml(c);
+  document.getElementById('contact-info-list').insertAdjacentHTML('beforeend', soc);
+  document.getElementById('footer-contact').insertAdjacentHTML('beforeend',
+    (c.hours ? '<li><span style="color:var(--muted)">'+escapeHtml(c.hours)+'</span></li>' : '') + (soc ? '<li>'+soc+'</li>' : ''));
+  applyTexts();
+  applyImages();
 
   observeReveals();
   observeStats();
@@ -578,7 +646,7 @@ function observeStats(){
   nums.forEach(n=>obs.observe(n));
 }
 function animateNumber(el){
-  const target = el.getAttribute('data-target') || '0';
+  const target = toEn(el.getAttribute('data-target') || '0');
   const match = target.match(/[\d.]+/);
   const num = match ? parseFloat(match[0]) : 0;
   const suffix = target.replace(/^[\d.]+/, '');
@@ -708,71 +776,205 @@ document.querySelectorAll('.admin-tab').forEach(tab=>{
   });
 });
 
+/* ---------- ابزارهای مشترک ---------- */
+function toEn(x){
+  return String(x).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+}
+function iconHtml(s){
+  return s.img
+    ? '<div class="service-icon has-img"><img src="'+escapeAttr(s.img)+'" alt=""></div>'
+    : '<div class="service-icon">'+svgIcon(s.icon)+'</div>';
+}
+function hoursSmall(c){ return c.hours ? '<small>'+escapeHtml(c.hours)+'</small>' : ''; }
+const SOC = {
+  instagram:['اینستاگرام','<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>'],
+  telegram:['تلگرام','<path d="M21 4 3 11l6 2 2 6 3-4 5 4 2-15z"/>'],
+  whatsapp:['واتساپ','<path d="M3 21l1.6-4.7A8.5 8.5 0 1 1 8 19.6L3 21z"/><path d="M9 9c0 3 3 6 6 6l1.2-1.5-2-1-1 .8c-1-.4-2-1.4-2.4-2.4l.8-1-1-2L9 9z"/>']
+};
+function socialUrl(type, v){
+  v = (v||'').trim(); if(!v) return '';
+  if(/^https?:\/\//i.test(v)) return v;
+  v = v.replace(/^@/,'');
+  if(type==='instagram') return 'https://instagram.com/'+v;
+  if(type==='telegram') return 'https://t.me/'+v;
+  let d = toEn(v).replace(/\D/g,'');
+  if(d.indexOf('00')===0) d = d.slice(2); else if(d.charAt(0)==='0') d = '98'+d.slice(1);
+  return 'https://wa.me/'+d;
+}
+function socialHtml(c){
+  const out = Object.keys(SOC).map(k=>{
+    const u = socialUrl(k, c[k]);
+    return u ? '<a href="'+escapeAttr(u)+'" target="_blank" rel="noopener" aria-label="'+SOC[k][0]+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+SOC[k][1]+'</svg></a>' : '';
+  }).join('');
+  return out ? '<div class="social-row">'+out+'</div>' : '';
+}
+function pickImage(max, cb){
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
+  inp.onchange = ()=>{
+    const f = inp.files[0]; if(!f) return;
+    const img = new Image(); const url = URL.createObjectURL(f);
+    img.onload = ()=>{
+      const r = Math.min(1, max/Math.max(img.width, img.height));
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(img.width*r); cv.height = Math.round(img.height*r);
+      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+      URL.revokeObjectURL(url);
+      cb(cv.toDataURL('image/webp', 0.82));
+    };
+    img.onerror = ()=> alert('این فایل، تصویر معتبری نیست.');
+    img.src = url;
+  };
+  inp.click();
+}
+
+/* ---------- متن‌های قابل ویرایش ---------- */
+const TEXTS = [
+  ['brand','نام شرکت (هدر و فوتر)','.brand-name b'],
+  ['brandEn','نام انگلیسی زیر نام شرکت','.brand-name span'],
+  ['nav1','منو: مورد ۱','#main-nav a:nth-child(1)'],
+  ['nav2','منو: مورد ۲','#main-nav a:nth-child(2)'],
+  ['nav3','منو: مورد ۳','#main-nav a:nth-child(3)'],
+  ['nav4','منو: مورد ۴','#main-nav a:nth-child(4)'],
+  ['headerCta','دکمه‌ی بالای صفحه','.header-actions .btn'],
+  ['heroEyebrow','برچسب کوچک بالای عنوان اصلی','#hero .eyebrow'],
+  ['servicesEyebrow','بخش فعالیت‌ها: برچسب','#services .eyebrow'],
+  ['servicesTitle','بخش فعالیت‌ها: عنوان','#services .section-title'],
+  ['servicesSub','بخش فعالیت‌ها: توضیح','#services .section-sub'],
+  ['processEyebrow','بخش روند کار: برچسب','#process .eyebrow'],
+  ['processTitle','بخش روند کار: عنوان','#process .section-title'],
+  ['processSub','بخش روند کار: توضیح','#process .section-sub'],
+  ['trainingEyebrow','بخش آموزش: برچسب','#training .section-sub ~ * .x, #training .eyebrow'],
+  ['trainingTitle','بخش آموزش: عنوان','#training .section-title'],
+  ['trainingSub','بخش آموزش: توضیح','#training .section-sub'],
+  ['trainingBox','کادر آموزش: عنوان','.training-visual h3'],
+  ['trainingBoxText','کادر آموزش: متن','.training-visual p'],
+  ['collabEyebrow','بخش همکاری: برچسب','#collab .eyebrow'],
+  ['collabTitle','بخش همکاری: عنوان','#collab .section-title'],
+  ['collabSub','بخش همکاری: توضیح','#collab .section-sub'],
+  ['collabCta','بخش همکاری: متن دکمه','#collab .btn'],
+  ['articlesEyebrow','بخش مقالات: برچسب','#articles .eyebrow'],
+  ['articlesTitle','بخش مقالات: عنوان','#articles .section-title'],
+  ['articlesSub','بخش مقالات: توضیح','#articles .section-sub'],
+  ['contactEyebrow','بخش تماس: برچسب','#contact .eyebrow'],
+  ['contactTitle','بخش تماس: عنوان','#contact .section-title'],
+  ['contactSub','بخش تماس: توضیح','#contact .section-sub'],
+  ['footerText','توضیح زیر نام شرکت در فوتر','.footer-brand p']
+];
+const TEXT_DEFAULTS = {};
+TEXTS.forEach(t=>{
+  const el = document.querySelector(t[2].split(',').pop().trim());
+  TEXT_DEFAULTS[t[0]] = el ? el.textContent.trim() : '';
+});
+function applyTexts(){
+  const tx = siteContent.texts || {};
+  TEXTS.forEach(t=>{
+    const v = (tx[t[0]] != null && tx[t[0]] !== '') ? tx[t[0]] : TEXT_DEFAULTS[t[0]];
+    const sel = t[2].split(',').pop().trim();
+    document.querySelectorAll(sel).forEach(el=>{ el.textContent = v; });
+  });
+}
+const HERO_DEFAULT = document.getElementById('hero-visual').innerHTML;
+function applyImages(){
+  document.querySelectorAll('.brand-badge').forEach(b=>{
+    if(!b.dataset.def) b.dataset.def = b.innerHTML;
+    b.innerHTML = siteContent.logo ? '<img src="'+escapeAttr(siteContent.logo)+'" alt="">' : b.dataset.def;
+  });
+  document.getElementById('hero-visual').innerHTML = siteContent.heroImage
+    ? '<img src="'+escapeAttr(siteContent.heroImage)+'" alt="">' : HERO_DEFAULT;
+}
+
+/* ---------- ویرایشگر لیست‌ها ---------- */
+const LISTS = {
+  stats:{wrap:'e-stats-wrap', label:'آمار', fields:[['number','عدد (مثلاً +15)','input'],['label','برچسب','input']], make:()=>({number:'0', label:'عنوان'})},
+  services:{wrap:'e-services-wrap', label:'فعالیت', icons:1, fields:[['title','عنوان','input'],['desc','توضیح','textarea']], make:()=>({icon:'drop', title:'فعالیت جدید', desc:''})},
+  process:{wrap:'e-process-wrap', label:'مرحله', fields:[['title','عنوان','input'],['desc','توضیح','textarea']], make:()=>({title:'مرحله جدید', desc:''})},
+  training:{wrap:'e-training-wrap', label:'دوره', fields:[['title','عنوان','input'],['desc','توضیح','textarea']], make:()=>({title:'دوره جدید', desc:''})},
+  collabItems:{wrap:'e-collab-wrap', label:'کارت', icons:1, fields:[['title','عنوان','input'],['desc','توضیح','textarea']], make:()=>({icon:'building', title:'عنوان جدید', desc:''})}
+};
+function renderList(key){
+  const L = LISTS[key], wrap = document.getElementById(L.wrap);
+  const arr = siteContent[key] = siteContent[key] || [];
+  wrap.dataset.list = key;
+  const opts = it => Object.keys(ICON_NAMES).map(k=>'<option value="'+k+'"'+(it.icon===k?' selected':'')+'>'+ICON_NAMES[k]+'</option>').join('');
+  wrap.innerHTML = arr.map((it,i)=>
+    '<div class="admin-card" data-i="'+i+'">'+
+    '<div class="admin-card-head"><span style="font-size:12.5px;color:var(--muted);">'+L.label+' '+(i+1)+'</span>'+
+    '<button type="button" class="remove-item-btn" data-act="del">حذف</button></div>'+
+    (L.icons ? '<div class="admin-field"><label>آیکون یا تصویر</label><div class="icon-row"><select data-f="icon">'+opts(it)+'</select>'+
+      '<button type="button" class="btn btn-ghost btn-sm" data-act="img">'+(it.img?'تغییر تصویر':'آپلود تصویر')+'</button>'+
+      (it.img ? '<img class="thumb" src="'+escapeAttr(it.img)+'" alt=""><button type="button" class="remove-item-btn" data-act="noimg">حذف تصویر</button>' : '')+
+      '</div></div>' : '')+
+    L.fields.map(f=> '<div class="admin-field"><label>'+f[1]+'</label>'+
+      (f[2]==='textarea'
+        ? '<textarea data-f="'+f[0]+'">'+escapeHtml(it[f[0]]||'')+'</textarea>'
+        : '<input data-f="'+f[0]+'" value="'+escapeAttr(it[f[0]])+'">')+'</div>').join('')+
+    '</div>').join('') +
+    '<button type="button" class="btn btn-ghost btn-sm add-item-btn" data-act="add">+ افزودن '+L.label+' جدید</button>';
+}
+
+/* ---------- تصاویر تکی ---------- */
+const SINGLE_IMGS = [['logo','لوگوی شرکت (جایگزین آیکون قطره در هدر و فوتر)',300],['heroImage','تصویر پس‌زمینه‌ی بالای صفحه (جایگزین گرافیک پیش‌فرض)',1600]];
+function renderImages(){
+  document.getElementById('e-images-wrap').innerHTML = SINGLE_IMGS.map(x=>{
+    const k = x[0], v = siteContent[k];
+    return '<div class="admin-card"><div class="admin-field"><label>'+x[1]+'</label><div class="icon-row">'+
+      '<button type="button" class="btn btn-ghost btn-sm" data-simg="'+k+'">'+(v?'تغییر تصویر':'آپلود تصویر')+'</button>'+
+      (v ? '<img class="thumb" src="'+escapeAttr(v)+'" alt=""><button type="button" class="remove-item-btn" data-sclear="'+k+'">حذف</button>' : '')+
+      '</div></div></div>';
+  }).join('');
+}
+function renderTextsEditor(){
+  const tx = siteContent.texts || {};
+  document.getElementById('e-texts-wrap').innerHTML = TEXTS.map(t=>{
+    const cur = (tx[t[0]] != null && tx[t[0]] !== '') ? tx[t[0]] : TEXT_DEFAULTS[t[0]];
+    return '<div class="admin-field"><label>'+t[1]+'</label>'+
+      (cur.length > 60
+        ? '<textarea data-text="'+t[0]+'">'+escapeHtml(cur)+'</textarea>'
+        : '<input data-text="'+t[0]+'" value="'+escapeAttr(cur)+'">')+'</div>';
+  }).join('');
+}
+
 function populateAdminForm(){
   document.getElementById('e-hero-title').value = siteContent.hero.title.replace(/<br>/g,'\n').replace(/<\/?em>/g,'');
   document.getElementById('e-hero-subtitle').value = siteContent.hero.subtitle;
   document.getElementById('e-hero-cta1').value = siteContent.hero.cta1;
   document.getElementById('e-hero-cta2').value = siteContent.hero.cta2;
-
-  document.getElementById('e-stats-wrap').innerHTML = siteContent.stats.map((s,i)=>`
-    <div class="admin-grid" style="margin-bottom:10px;">
-      <div class="admin-field"><label>عدد ${i+1}</label><input class="e-stat-num" data-i="${i}" value="${escapeAttr(s.number)}"></div>
-      <div class="admin-field"><label>برچسب ${i+1}</label><input class="e-stat-label" data-i="${i}" value="${escapeAttr(s.label)}"></div>
-    </div>`).join('');
-
-  document.getElementById('e-services-wrap').innerHTML = siteContent.services.map((s,i)=>`
-    <div class="admin-card">
-      <div class="admin-field"><label>عنوان</label><input class="e-service-title" data-i="${i}" value="${escapeAttr(s.title)}"></div>
-      <div class="admin-field"><label>توضیح</label><textarea class="e-service-desc" data-i="${i}">${escapeHtml(s.desc)}</textarea></div>
-    </div>`).join('');
-
-  document.getElementById('e-process-wrap').innerHTML = siteContent.process.map((p,i)=>`
-    <div class="admin-card">
-      <div class="admin-field"><label>عنوان مرحله ${p.n}</label><input class="e-process-title" data-i="${i}" value="${escapeAttr(p.title)}"></div>
-      <div class="admin-field"><label>توضیح</label><textarea class="e-process-desc" data-i="${i}">${escapeHtml(p.desc)}</textarea></div>
-    </div>`).join('');
-
-  renderTrainingEditor();
-
-  document.getElementById('e-contact-phone').value = siteContent.contact.phone || '';
-  document.getElementById('e-contact-mobile').value = siteContent.contact.mobile || '';
-  document.getElementById('e-contact-email').value = siteContent.contact.email || '';
-  document.getElementById('e-contact-address').value = siteContent.contact.address || '';
+  ['phone','mobile','email','address','hours','instagram','telegram','whatsapp'].forEach(k=>{
+    document.getElementById('e-contact-'+k).value = siteContent.contact[k] || '';
+  });
+  renderImages();
+  renderTextsEditor();
+  Object.keys(LISTS).forEach(renderList);
 }
 
-function syncTrainingFromDOM(){
-  document.querySelectorAll('.e-training-title').forEach(el=>{
-    if(siteContent.training[el.dataset.i]) siteContent.training[el.dataset.i].title = el.value.trim();
+(function(){
+  const tabc = document.getElementById('tab-content');
+  const onEdit = e=>{
+    const t = e.target;
+    if(t.dataset.text){
+      siteContent.texts = siteContent.texts || {};
+      siteContent.texts[t.dataset.text] = t.value;
+      return;
+    }
+    const card = t.closest('[data-i]'), wrap = t.closest('[data-list]');
+    if(card && wrap && t.dataset.f) siteContent[wrap.dataset.list][+card.dataset.i][t.dataset.f] = t.value;
+  };
+  tabc.addEventListener('input', onEdit);
+  tabc.addEventListener('change', onEdit);
+  tabc.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    if(b.dataset.simg){ const x = SINGLE_IMGS.find(q=>q[0]===b.dataset.simg); pickImage(x[2], d=>{ siteContent[x[0]] = d; renderImages(); }); return; }
+    if(b.dataset.sclear){ siteContent[b.dataset.sclear] = ''; renderImages(); return; }
+    const act = b.dataset.act; if(!act) return;
+    const wrap = b.closest('[data-list]'); if(!wrap) return;
+    const key = wrap.dataset.list, arr = siteContent[key];
+    const card = b.closest('[data-i]'), i = card ? +card.dataset.i : -1;
+    if(act==='add'){ arr.push(LISTS[key].make()); renderList(key); }
+    else if(act==='del'){ if(confirm('این مورد حذف شود؟')){ arr.splice(i,1); renderList(key); } }
+    else if(act==='noimg'){ delete arr[i].img; renderList(key); }
+    else if(act==='img'){ pickImage(500, d=>{ arr[i].img = d; renderList(key); }); }
   });
-  document.querySelectorAll('.e-training-desc').forEach(el=>{
-    if(siteContent.training[el.dataset.i]) siteContent.training[el.dataset.i].desc = el.value.trim();
-  });
-}
-function renderTrainingEditor(){
-  const wrap = document.getElementById('e-training-wrap');
-  wrap.innerHTML = siteContent.training.map((t,i)=>`
-    <div class="admin-card">
-      <div class="admin-card-head">
-        <span style="font-size:12.5px; color:var(--muted);">دوره ${i+1}</span>
-        <button type="button" class="remove-item-btn remove-training-btn" data-i="${i}">حذف این دوره</button>
-      </div>
-      <div class="admin-field"><label>عنوان دوره</label><input class="e-training-title" data-i="${i}" value="${escapeAttr(t.title)}"></div>
-      <div class="admin-field"><label>توضیح</label><textarea class="e-training-desc" data-i="${i}">${escapeHtml(t.desc||'')}</textarea></div>
-    </div>`).join('') + `<button type="button" class="btn btn-ghost btn-sm add-item-btn" id="add-training-btn">+ افزودن دوره جدید</button>`;
-
-  wrap.querySelectorAll('.remove-training-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      syncTrainingFromDOM();
-      siteContent.training.splice(Number(btn.dataset.i), 1);
-      renderTrainingEditor();
-    });
-  });
-  document.getElementById('add-training-btn').addEventListener('click', ()=>{
-    syncTrainingFromDOM();
-    siteContent.training.push({title:'دوره جدید', desc:''});
-    renderTrainingEditor();
-  });
-}
+})();
 
 document.getElementById('save-content-btn').addEventListener('click', async ()=>{
   const statusEl = document.getElementById('save-status');
@@ -783,21 +985,12 @@ document.getElementById('save-content-btn').addEventListener('click', async ()=>
   siteContent.hero.cta1 = document.getElementById('e-hero-cta1').value.trim();
   siteContent.hero.cta2 = document.getElementById('e-hero-cta2').value.trim();
 
-  document.querySelectorAll('.e-stat-num').forEach(el=> siteContent.stats[el.dataset.i].number = el.value.trim());
-  document.querySelectorAll('.e-stat-label').forEach(el=> siteContent.stats[el.dataset.i].label = el.value.trim());
-
-  document.querySelectorAll('.e-service-title').forEach(el=> siteContent.services[el.dataset.i].title = el.value.trim());
-  document.querySelectorAll('.e-service-desc').forEach(el=> siteContent.services[el.dataset.i].desc = el.value.trim());
-
-  document.querySelectorAll('.e-process-title').forEach(el=> siteContent.process[el.dataset.i].title = el.value.trim());
-  document.querySelectorAll('.e-process-desc').forEach(el=> siteContent.process[el.dataset.i].desc = el.value.trim());
-
-  syncTrainingFromDOM();
 
   siteContent.contact.phone = document.getElementById('e-contact-phone').value.trim();
   siteContent.contact.mobile = document.getElementById('e-contact-mobile').value.trim();
   siteContent.contact.email = document.getElementById('e-contact-email').value.trim();
   siteContent.contact.address = document.getElementById('e-contact-address').value.trim();
+  ['hours','instagram','telegram','whatsapp'].forEach(k=>{ siteContent.contact[k] = document.getElementById('e-contact-'+k).value.trim(); });
 
   const btn = document.getElementById('save-content-btn');
   btn.disabled = true;
