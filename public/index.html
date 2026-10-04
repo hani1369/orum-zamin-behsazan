@@ -407,9 +407,17 @@ async function loadContent(){
   }catch(e){}
   siteContent = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
 }
+let lastSaveStatus = 0;
 async function saveContent(){
-  const res = await apiFetch('/api/content', {method:'POST', body: JSON.stringify(siteContent)});
-  return res.ok;
+  lastSaveStatus = 0;
+  try{
+    const res = await apiFetch('/api/content', {method:'POST', body: JSON.stringify(siteContent)});
+    lastSaveStatus = res.status;
+    return res.ok;
+  }catch(e){
+    lastSaveStatus = -1;
+    return false;
+  }
 }
 async function loadLeads(){
   try{
@@ -767,6 +775,9 @@ function renderTrainingEditor(){
 }
 
 document.getElementById('save-content-btn').addEventListener('click', async ()=>{
+  const statusEl = document.getElementById('save-status');
+  statusEl.textContent = 'در حال ذخیره...';
+  try{
   siteContent.hero.title = document.getElementById('e-hero-title').value.trim().split('\n').join('<br>');
   siteContent.hero.subtitle = document.getElementById('e-hero-subtitle').value.trim();
   siteContent.hero.cta1 = document.getElementById('e-hero-cta1').value.trim();
@@ -792,9 +803,25 @@ document.getElementById('save-content-btn').addEventListener('click', async ()=>
   btn.disabled = true;
   const ok = await saveContent();
   btn.disabled = false;
-  if(ok){ renderAll(); showToast('تغییرات با موفقیت ذخیره شد.'); }
-  else if(!adminToken){ showToast('نشست شما منقضی شده؛ دوباره وارد شوید.'); showLogin(); }
-  else { showToast('ذخیره‌سازی ناموفق بود. دوباره تلاش کنید.'); }
+  if(ok){
+    renderAll();
+    statusEl.textContent = '✓ ذخیره شد';
+    showToast('تغییرات با موفقیت ذخیره شد.');
+  } else if(!adminToken){
+    statusEl.textContent = 'نشست منقضی شده';
+    alert('نشست شما منقضی شده؛ دوباره وارد شوید.');
+    showLogin();
+  } else {
+    const msg = 'ذخیره‌سازی ناموفق بود (کد خطا: ' + lastSaveStatus + '). این کد را برای پشتیبان بفرستید.';
+    statusEl.textContent = msg;
+    alert(msg);
+  }
+  }catch(err){
+    document.getElementById('save-content-btn').disabled = false;
+    const msg = 'خطا در صفحه: ' + (err && err.message ? err.message : err);
+    statusEl.textContent = msg;
+    alert(msg);
+  }
 });
 
 /* articles tab */
