@@ -2,11 +2,14 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<script>document.documentElement.classList.add('pre');setTimeout(function(){document.documentElement.classList.remove('pre')},4000);</script>
+<style>html.pre body{opacity:0}body{transition:opacity .3s ease}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>اروم زمین بهسازان | Orum Zamin Behsazan | ژئوفیزیک و آب‌یابی</title>
 <meta name="description" content="اروم زمین بهسازان (Orum Zamin Behsazan) - خدمات تخصصی ژئوفیزیک، آب‌یابی و آموزش.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="/styles.css">
 <style>
 .service-icon.has-img{padding:0;overflow:hidden}
@@ -455,11 +458,8 @@ async function apiFetch(path, options){
   return res;
 }
 
-async function loadContent(){
-  try{
-    const res = await fetch('/api/content');
-    if(res.ok){
-      const data = await res.json();
+let lastRaw = '';
+function mergeContent(data){
       const merged = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
       if(data && typeof data === 'object'){
         if(data.hero && typeof data.hero === 'object') merged.hero = Object.assign(merged.hero, data.hero);
@@ -478,7 +478,20 @@ async function loadContent(){
         });
         if(data.contact && typeof data.contact === 'object') merged.contact = Object.assign(merged.contact, data.contact);
       }
-      siteContent = merged;
+  return merged;
+}
+async function loadContent(){
+  try{
+    const ctl = new AbortController();
+    const tm = setTimeout(()=>ctl.abort(), 8000);
+    const res = await fetch('/api/content', {signal: ctl.signal});
+    clearTimeout(tm);
+    if(res.ok){
+      const txt = await res.text();
+      const data = JSON.parse(txt);
+      lastRaw = txt;
+      try{ localStorage.setItem('oz_content_cache', txt); }catch(e){}
+      siteContent = mergeContent(data);
       return;
     }
   }catch(e){}
@@ -490,6 +503,7 @@ async function saveContent(){
   try{
     const res = await apiFetch('/api/content', {method:'POST', body: JSON.stringify(siteContent)});
     lastSaveStatus = res.status;
+    if(res.ok){ try{ localStorage.setItem('oz_content_cache', JSON.stringify(siteContent)); }catch(e){} }
     return res.ok;
   }catch(e){
     lastSaveStatus = -1;
@@ -1377,8 +1391,19 @@ function showToast(text){
    INIT
 ============================================================ */
 (async function init(){
+  const reveal = ()=> document.documentElement.classList.remove('pre');
+  let shown = false, cached = '';
+  // نمایش فوری آخرین محتوای ذخیره‌شده (بازدیدهای بعدی)
+  try{
+    cached = localStorage.getItem('oz_content_cache') || '';
+    if(cached){ siteContent = mergeContent(JSON.parse(cached)); renderAll(); shown = true; reveal(); }
+  }catch(e){ cached = ''; }
+  // اگر سرور کند بود، بعد از ۲.۵ ثانیه با محتوای پیش‌فرض نمایش بده
+  const early = setTimeout(()=>{ if(!shown){ shown = true; try{ renderAll(); }catch(e){} reveal(); } }, 2500);
   await loadContent();
-  renderAll();
+  clearTimeout(early);
+  if(!(shown && lastRaw && lastRaw === cached)){ renderAll(); }
+  reveal();
   loadArticles().then(renderArticlesPublic);
 })();
 </script>
